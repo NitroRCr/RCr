@@ -1,5 +1,8 @@
-class UnicodeFont:
-    styles = {
+class UnicodeFont:      # 文本处理部分，封装为了一个类
+    def __init__(self):
+        pass
+
+    styles = {      # 所有字体
         'letters': {
             'normal': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
             'bold': '𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙',
@@ -28,20 +31,20 @@ class UnicodeFont:
             'reverse': ['¿', '˙', "'", '¡', '⅋', ',,'],
         },
     }
-    style_name_list = [
-        'bold',
-        'italic',
-        'monospace',
-        'script',
-        'bold-script',
-        'bold-italic',
-        'double-struck',
-        'sans-serif',
-        'sans-serif-bold',
-        'sans-serif-italic',
-        'sans-serif-bold-italic',
-        'reverse'
-    ]
+    style_name_dict = {
+        'bold': '粗体',
+        'italic': '斜体',
+        'monospace': '等宽字体',
+        'script': '手写',
+        'bold-script': '手写-粗体',
+        'bold-italic': '粗斜体',
+        'double-struck': '双线字体',
+        'sans-serif': '无衬线',
+        'sans-serif-bold': '无衬线-粗体',
+        'sans-serif-italic': '无衬线-斜体',
+        'sans-serif-bold-italic': '无衬线-粗斜体',
+        'reverse': '反转'
+    }
 
     # 批量替换
     def replace_all(self, text, to_, from_):
@@ -71,13 +74,16 @@ class UnicodeFont:
     # 返回text的所有字体形式
     def all_fonts(self, text):
         result = {}
-        for i in self.style_name_list:
-            result[i] = (self.font(text, i))
+        for i in self.style_name_dict:
+            if i == 'reverse':
+                result[self.style_name_dict[i]] = self.font(text, i)[::-1]
+            else:
+                result[self.style_name_dict[i]] = self.font(text, i)
         return result
 
 
-def main():
-    uf = UnicodeFont()
+def main():     # 逻辑部分，运行界面
+    uf = UnicodeFont()      # 新建UnicodeFont对象，用于文本处理
     print('''UnicodeFont
 a.字体转换
 b.使用说明
@@ -86,14 +92,14 @@ d.常见问题
 ''')
     choice = input().lower()
     if choice == 'a':
-        text = input('输入任意英文：')
+        text = input('输入任意英文：')     # 输入
         result = uf.all_fonts(text)
         print('\nResult:\n')
         for i in result:
-            print('%s: %s' % (i, result[i]))
+            print('%s: %s' % (i, result[i]))    # 输出
         print('\n')
         input('输入任意字符返回主页')
-        main()
+        main()                                  # 递归，返回主页
     elif choice == 'b':
         example = uf.all_fonts('Example Text, 01234.')
         print('''
@@ -133,4 +139,4 @@ UnicodeFont
         main()
 
 
-main()
+main()      # Launch !
